@@ -1,9 +1,11 @@
 # TensorFlow Object Detection API Results Exporter
 
-This Python project is created to facilitate the export of object detection results, including images with Region of Interest (ROI) annotations and XML data.
-It utilizes portions of [Tensorflow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection), an open-source project developed by the TensorFlow team at Google, which is licensed under the Apache License Version 2.0.
+## Introduction
 
-I have not modified code and have only imported modules directly for the purpose of object detection.
+<b>TensorFlow Object Detection API Results Exporter</b> is a Python project designed to address a specific need in the field of object detection. It extends the functionality of the [Tensorflow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection) by providing the capability to export images with Region of Interest (ROI) annotations and boundary box detections as XML data.
+
+It utilizes portions of [Tensorflow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection), an open-source project developed by the TensorFlow team at Google, which is licensed under the Apache License Version 2.0. I have not modified code and have only imported modules directly for the purpose of object detection.
+
 For more information about [Tensorflow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection) and its license, please visit  [here](https://github.com/tensorflow/models/blob/master/LICENSE).
 
 ## Table of Contents
