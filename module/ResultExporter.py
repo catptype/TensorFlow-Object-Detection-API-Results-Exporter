@@ -2,6 +2,7 @@ import sys
 sys.dont_write_bytecode = True
 
 import os
+import shutil
 import time
 import numpy as np
 import tensorflow as tf
@@ -31,11 +32,12 @@ class ResultExporter():
         Initializes the ResultExporter instance.
 
         - Initializes the model and category index.
-        - Loads image paths and creates export directories.
+        - Creates export directories.
         """
         self.model, self.category_idx = self.__initializing_model()
-        self.__image_paths = self.__load_image_paths()
         self.__prepare_path(os.path.join("Image","export_result"))
+        self.__prepare_path(os.path.join("Image","object_found"))
+        self.__prepare_path(os.path.join("Image","object_not_found"))
 
     def __prepare_path(self, path):
         """
@@ -139,20 +141,30 @@ class ResultExporter():
             roi (bool): Whether to export ROI images.
             xml (bool): Whether to export XML annotations.
         """
-        for image_path in self.__image_paths:
-            # Set parameter
+        image_paths = self.__load_image_paths()
+        progress_bar = tf.keras.utils.Progbar(len(image_paths), 
+                                              stateful_metrics=["progress"],
+                                              width=20, 
+                                              interval=0.1, 
+                                              unit_name='image')
+        for image_path in image_paths:
+            # Prepare filename and its extension
             filename = os.path.basename(image_path)
             _, ext = os.path.splitext(filename)
-
-            print(f"Running inference for {filename}... ", end="")
 
             # Calling ObjectDetectionAPI class
             obj_detect = ObjectDetectionAPI(image_path, self.model)
             detections = obj_detect.detections
 
+            if max(detections['detection_scores']) < threshold:
+                source = os.path.join("Image", filename)
+                destination = os.path.join("Image", "object_not_found", filename)
+                shutil.move(source, destination)
+                progress_bar.add(1)
+                continue
+
             # Export image with ROI
             if roi:
-                print("exporting ROI... ", end="")
                 image = obj_detect.image
                 image_np = np.array(image.convert('RGB'))
                 filename_roi = os.path.join("Image", "export_result", filename.replace(f"{ext}", f"_ROI{ext}"))
@@ -166,12 +178,15 @@ class ResultExporter():
             
             # Export XML
             if xml:
-                print("exporting XML... ", end="")
                 filename_xml = os.path.join("Image", "export_result", filename.replace(ext, ".xml"))
                 exporter = XMLExporter(image_filename=filename, 
                                         detections=detections, 
                                         category_idx=self.category_idx, 
                                         threshold=threshold)
                 exporter.write_xml(filename_xml)
-                
-            print("COMPLETE")
+
+            source = os.path.join("Image", filename)
+            destination = os.path.join("Image", "object_found", filename)
+            shutil.move(source, destination)
+            
+            progress_bar.add(1)
