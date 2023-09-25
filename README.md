@@ -26,7 +26,7 @@ Follow these steps to use the TensorFlow Object Detection API Results Exporter:
 1. Put your `.jpg` and `.png` files into the `Image` directory.
 2. Place your Object Detection API model in the `Model` directory.
 3. Add a `label_map.pbtxt` file to the corresponding Object Detection API model directory.
-4. Run the `TensorFlow Object Detection API Results Exporter.ipynb` notebook.
+4. Run code in `TensorFlow Object Detection API Results Exporter.ipynb` notebook.
 
 After completing the third step, your directory structure should resemble the following:
 ```
@@ -51,7 +51,11 @@ After completing the third step, your directory structure should resemble the fo
 
 ## Output
 
-After running the notebook, the `Image` directory will contain an `export_result` subdirectory with exported images and XML annotations.
+After running the code in the notebook, the `Image` directory will contain `export_result`, `object_found`, and `object_not_found` subdirectories.<br>
+In the `export_result` subdirectory, images with ROI and their corresponding XML annotations will be saved here.<br>
+In the `object_found` subdirectory, all detected images will be moved here.<br>
+In the `object_not_found` subdirectory, all images that were not detected will be moved here.
+
 ```
 .
 ├── Images
@@ -59,6 +63,14 @@ After running the notebook, the `Image` directory will contain an `export_result
 │   │     ├── *.jpg
 │   │     ├── *.png
 │   │     ├── *.xml
+│   │     └── ...
+│   ├── object_found
+│   │     ├── *.jpg
+│   │     ├── *.png
+│   │     └── ...
+│   ├── object_not_found
+│   │     ├── *.jpg
+│   │     ├── *.png
 │   │     └── ...
 ...
 ```
